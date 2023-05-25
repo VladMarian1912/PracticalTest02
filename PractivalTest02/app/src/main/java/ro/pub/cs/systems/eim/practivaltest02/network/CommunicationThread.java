@@ -65,11 +65,11 @@ public class CommunicationThread extends Thread {
                 case Constants.GET:
                     Log.i(Constants.TAG, "Get operation");
                     if (data.containsKey(key)) {
-                        result = "Value for key=" + key  + " :" + data.get(key).toString() +"\n";
-                        Log.i(Constants.TAG, "Value for key=" + key  + " :" + data.get(key).toString() +"\n");
+                        result = "Value for key=" + key  + " :" + data.get(key).toString();
+                        Log.i(Constants.TAG, "Value for key=" + key  + " :" + data.get(key).toString());
                     } else {
-                        result = "none\n";
-                        Log.i(Constants.TAG, "none\n");
+                        result = "none";
+                        Log.i(Constants.TAG, "none");
 
                     }
                     break;
