@@ -45,12 +45,69 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Server port should be filled!", Toast.LENGTH_SHORT).show();
                 return;
             }
-//            serverThread = new ServerThread(Integer.parseInt(serverPort));
-//            if (serverThread.getServerSocket() == null) {
-//                Log.e(Constants.TAG, "[MAIN ACTIVITY] Could not create server thread!");
-//                return;
-//            }
-//            serverThread.start();
+            serverThread = new ServerThread(Integer.parseInt(serverPort));
+            if (serverThread.getServerSocket() == null) {
+                Log.e(Constants.TAG, "[MAIN ACTIVITY] Could not create server thread!");
+                return;
+            }
+            serverThread.start();
+        }
+    }
+
+
+    private SetButtonClickListener putButtonClickListener = new SetButtonClickListener();
+    private class SetButtonClickListener implements Button.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            String clientAddress = clientAddressEditText.getText().toString();
+            String clientPort = clientPortEditText.getText().toString();
+            if (clientAddress == null || clientAddress.isEmpty()
+                    || clientPort == null || clientPort.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (serverThread == null || !serverThread.isAlive()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String value = valueEditText.getText().toString();
+            String key = keyEditText.getText().toString();
+
+            String operationType = Constants.PUT;
+
+            dataTextView.setText(Constants.EMPTY_STRING);
+            clientThread = new ClientThread(clientAddress, Integer.parseInt(clientPort), value, key, operationType, dataTextView);
+            clientThread.start();
+        }
+    }
+
+    private GetButtonClickListener getButtonClickListener = new GetButtonClickListener();
+    private class GetButtonClickListener implements Button.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            String clientAddress = clientAddressEditText.getText().toString();
+            String clientPort = clientPortEditText.getText().toString();
+            if (clientAddress == null || clientAddress.isEmpty()
+                    || clientPort == null || clientPort.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] Client connection parameters should be filled!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (serverThread == null || !serverThread.isAlive()) {
+                Toast.makeText(getApplicationContext(), "[MAIN ACTIVITY] There is no server to connect to!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String value = valueEditText.getText().toString();
+            String key = keyEditText.getText().toString();
+
+            String operationType = Constants.GET;
+
+            dataTextView.setText(Constants.EMPTY_STRING);
+            clientThread = new ClientThread(clientAddress, Integer.parseInt(clientPort), value, key, operationType, dataTextView);
+            clientThread.start();
         }
     }
 
@@ -91,7 +148,7 @@ public class PracticalTest02MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.i(Constants.TAG, "[MAIN ACTIVITY] onDestroy() callback method has been invoked");
         if (serverThread != null) {
-//            serverThread.stopThread();
+            serverThread.stopThread();
         }
         super.onDestroy();
     }
